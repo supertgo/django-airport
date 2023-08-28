@@ -3,7 +3,6 @@ from django.db import models
 from app_core.utils.interfaces import UUIDCustomModel
 
 
-
 # Create your models here.
 class Airport(UUIDCustomModel):
     state = models.CharField(max_length=2, blank=True, null=True)

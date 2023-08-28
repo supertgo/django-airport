@@ -1,4 +1,3 @@
-from datetime import datetime
 import numpy as np
 import pandas as pd
 from django.core.management import BaseCommand
@@ -13,30 +12,41 @@ class Command(BaseCommand):
         self.log = {
             "model": "Airport",
             "success": False,
-            "n_records_inserted": 0,
+            "information": None,
             "n_records_updated": 0,
-            "details": None,
-            "started_at": datetime.utcnow(),
-            "finished_at": None,
+            "n_records_created": 0
         }
 
     def handle(self, *args, **options):
-        self.log["details"] = self.get_api_data()
-        if self.log["details"] is not None:
-            self.log["finished_at"] = datetime.utcnow()
+        self.log["information"] = self.get_api_data()
+        if self.log["information"] is not None:
             self.stdout.write(self.style.ERROR("Failed to fetch API data."))
             return
 
-        self.segregate_data_for_action()
+        self.divide_airport_data()
 
         if self.domestic_airport.shape[0] > 0:
-            self.log["n_records_inserted"] = self.load_data()
+            self.log["n_records_created"] = self.create_airports()
 
         if self.data_to_update.shape[0] > 0:
-            self.log["n_records_updated"] = self.update_data()
+            self.log["n_records_updated"] = self.update_airports()
+
+        n_records_created = self.log.get('n_records_created', {})
+        print(n_records_created, 'created')
+
+        n_records_updated = self.log.get('n_records_updated', 0)
 
         self.log["success"] = True
-        self.log["finished_at"] = datetime.utcnow()
+
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"{n_records_created} records created."
+            )
+        )
+        self.stdout.write(
+            self.style.SUCCESS(f"{n_records_updated} records updated.")
+        )
         self.stdout.write(
             self.style.SUCCESS("Data synchronization completed successfully.")
         )
@@ -54,7 +64,7 @@ class Command(BaseCommand):
 
         self.domestic_airport = pd.DataFrame(domestic_airport_data)
 
-    def load_data(self):
+    def create_airports(self):
         result = {}
         batch_size = 500
 
@@ -64,15 +74,16 @@ class Command(BaseCommand):
 
         try:
             Airport.objects.bulk_create(ins_list, batch_size)
-            result["inserted"] = len(objs)
+            result = len(objs)
         except Exception as err:
             result["error"] = True
-            result["details"] = f"Failed to insert data at Airport Model: {str(err)}"
+            result[
+                "information"
+            ] = f"Failed to insert data at Airport Model: {str(err)}"
         return result
 
-    def segregate_data_for_action(self):
-        """Compares the inputted dataframe data to the existing data on the recipient model"""
-        df = pd.merge(
+    def divide_airport_data(self):
+        merged_data = pd.merge(
             self.domestic_airport,
             self.retrieves_current_data,
             how="left",
@@ -80,17 +91,17 @@ class Command(BaseCommand):
             suffixes=["", "_db"],
         )
 
-        columns = [col for col in df.columns if not col.endswith("_db")]
+        columns = [col for col in merged_data.columns if not col.endswith("_db")]
 
         self.domestic_airport = (
-            df.loc[df["id"].isna(), columns].drop(columns=["id"]).reset_index(drop=True)
+            merged_data.loc[merged_data["id"].isna(), columns].drop(columns=["id"]).reset_index(drop=True)
         )
 
-        self.data_to_update = df.loc[df["id"].notna(), :].pipe(
-            self.filter_changed_values
+        self.data_to_update = merged_data.loc[merged_data["id"].notna(), :].pipe(
+            self.filter_changed_columns
         )
 
-    def update_data(self):
+    def update_airports(self):
         batch_size = 500
         objs = self.data_to_update.replace({np.nan: None}).to_dict("records")
 
@@ -105,24 +116,22 @@ class Command(BaseCommand):
             print.error(f"Failed to update airports data: {err}")
             return 0
 
-    def filter_changed_values(self, df: pd.DataFrame) -> pd.DataFrame:
-        """This methods returns only the data that is new in comparison to the existing data"""
+    def filter_changed_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         if df.empty:
             return pd.DataFrame()
 
-        for col in [c for c in df.columns if c.endswith("_db")]:
-            new_values = df[col.replace("_db", "")]
+        for db_column in [col for col in df.columns if col.endswith("_db")]:
+            new_values = df[db_column.replace("_db", "")]
+            db_values = df[db_column]
 
-            db_values = df[col]
-
-            df[col + "_test"] = np.where(
+            df[db_column + "_changed"] = np.where(
                 (new_values.notna()) & (new_values != db_values), True, False
             )
 
-        has_new_data = df[[c for c in df.columns if c.endswith("_test")]].any(axis=1)
+        rows_with_changes = df[[col for col in df.columns if col.endswith("_changed")]].any(axis=1)
 
         return df.loc[
-            has_new_data, [c for c in df.columns if not c.endswith(("_db", "_test"))]
+            rows_with_changes, [col for col in df.columns if not col.endswith(("_db", "_changed"))]
         ].reset_index(drop=True)
 
     @property
