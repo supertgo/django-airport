@@ -132,6 +132,10 @@ Now run the follwing command to enter on shell container:
 ```bash
 docker exec -it <container-name-or-id> bash
 ```
+Now run to apply the migrations:
+```bash
+python manage.py migrate
+```
 
 ### To test the first challenge, just run:
 
