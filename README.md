@@ -161,7 +161,7 @@ Copy the curl and put on your `API development platform`
 ### To run the tests
 
 ```bash
-python3 manage.py test
+python manage.py test
 ```
 
 ## Technologies Used
