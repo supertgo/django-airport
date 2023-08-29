@@ -32,7 +32,6 @@ class Command(BaseCommand):
             self.log["n_records_updated"] = self.update_airports()
 
         n_records_created = self.log.get('n_records_created', {})
-        print(n_records_created, 'created')
 
         n_records_updated = self.log.get('n_records_updated', 0)
 
