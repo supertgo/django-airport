@@ -1,4 +1,5 @@
 from django.test import TestCase
+from app_core.models import Airport
 from app_api.views import FlightView
 from app_api.consts import (
     ERROR_AIRPORT_DOEST_NOT_EXITS,
@@ -9,7 +10,7 @@ from app_api.consts import (
 )
 
 
-class TestFlightViewQuery(TestCase):
+class TestFlightView(TestCase):
     def setUp(self):
         self.validator = FlightView()
 
@@ -47,7 +48,7 @@ class TestFlightViewQuery(TestCase):
         self.validator.return_date = "2023-08-25"
         self.assertEqual(self.validator.validate_query(), ERROR_SAME_AIRPORTS)
 
-    def test_airport_exists(self):
+    def test_throw_error_when_airport_not_exists(self):
         self.validator.origin = "CZS"
         self.validator.destination = "POA"
 
@@ -55,3 +56,29 @@ class TestFlightViewQuery(TestCase):
             self.validator.validate_airport(),
             ERROR_AIRPORT_DOEST_NOT_EXITS(self.validator.origin),
         )
+
+    def test_throw_empty_string_when_airport_exists(self):
+        self.validator.origin = "XXX"
+        self.validator.destination = "YYY"
+
+        airport = Airport(
+            state="CA",
+            iata="XXX",
+            city="New city",
+            is_active=True,
+            inactive_reason=None,
+        )
+
+        airport.save()
+
+        airport = Airport(
+            state="AB",
+            iata="YYY",
+            city="New city2",
+            is_active=True,
+            inactive_reason=None,
+        )
+
+        airport.save()
+
+        self.assertEqual(self.validator.validate_airport(), "")
