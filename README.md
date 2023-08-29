@@ -36,7 +36,9 @@ I've chose to use python language with Django framework
 ## Challenge 1
 To solve the first challenge, i've just followed the instructions on Django documentation https://docs.djangoproject.com/en/4.2/howto/custom-management-commands/ and created a file called `import_airports`, you can run inside airport folder:
 
-`python manage.py import_airports`
+```bash
+python manage.py import_airports
+```
 
 So we can create a routine with a job scheduler and call it daily as the challenge suggests.
 
@@ -62,8 +64,8 @@ With the following parameters:
 - Headers:
   - Authorization: Token-based authorization header (e.g., Token 3a96da71e6c3c3aa179282182b9c881c1612dc66).
 
-Where is an example:
-`http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-28&return_date=2023-08-30`
+Here is an example:
+`http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-29&return_date=2023-08-30`
 
 The response would be like this:
 ```json
@@ -111,14 +113,49 @@ The response would be like this:
     ...
 ]
 ```
-  
+
+Example of curl request:
 <br>
 
 `curl --request GET \
-  --url 'http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-28&return_date=2023-08-30&=' \
+  --url 'http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-29&return_date=2023-08-30&=' \
   --header 'Authorization: Token 3a96da71e6c3c3aa179282182b9c881c1612dc66'`
-  
 <br>
+
+## Setup
+
+Install the dependencies from the project: 
+
+```bash 
+cd airport/ && pip install -r requirements.tx
+```
+
+### To test the first challenge, just run:
+
+```bash
+python manage.py import_airports
+```
+
+### To test the second challenge follow the steps above:
+
+Create your superuser with the following command:
+
+```bash 
+python manage.py createsuperuser
+```
+Enter on admin url: `http://127.0.0.1:8000/admin/` and create a token for your `user`
+
+Copy the curl and put on your `API development platform`
+
+`curl --request GET \
+  --url 'http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-29&return_date=2023-08-30&=' \
+  --header 'Authorization: Token {{ your_user_token_here}}'`
+
+### To run the tests
+
+```bash
+python3 manage.py test
+```
 
 ## Technologies Used
 
