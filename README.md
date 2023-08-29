@@ -114,20 +114,23 @@ The response would be like this:
 ]
 ```
 
-Example of curl request:
-<br>
+Example of curl request
 
 `curl --request GET \
   --url 'http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-29&return_date=2023-08-30&=' \
   --header 'Authorization: Token 3a96da71e6c3c3aa179282182b9c881c1612dc66'`
-<br>
 
 ## Setup
 
 Install the dependencies from the project: 
 
 ```bash 
-cd airport/ && pip install -r requirements.tx
+docker-compose up -d
+```
+
+Now run the follwing command to enter on shell container:
+```bash
+docker exec -it <container-name-or-id> bash
 ```
 
 ### To test the first challenge, just run:
@@ -149,7 +152,7 @@ Copy the curl and put on your `API development platform`
 
 `curl --request GET \
   --url 'http://127.0.0.1:8000/api/airport/flight?origin=MAO&destination=BHZ&departure_date=2023-08-29&return_date=2023-08-30&=' \
-  --header 'Authorization: Token {{ your_user_token_here}}'`
+  --header 'Authorization: Token {{your_token}}'`
 
 ### To run the tests
 
