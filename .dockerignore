@@ -1,0 +1,10 @@
+.git/
+
+*.pyc
+*.env
+scripts/
+
+*.sqlite3
+
+.idea
+**/__pycache__/
