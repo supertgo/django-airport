@@ -55,7 +55,6 @@ If there is an error, the output is red.
 For the second challenge, I have used django rest framework documentation and created a get route http://127.0.0.1:8000/api/airport/flight
 
 With the following parameters:
-- Query Parameters:
   -  origin: The code of the origin airport (e.g., MAO).
   - destination: The code of the destination airport (e.g., BHZ).
   -  departure_date: The departure date of the flight in the format YYYY-MM-DD (e.g., 2023-08-28).
