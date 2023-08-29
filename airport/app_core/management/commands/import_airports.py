@@ -54,8 +54,9 @@ class Command(BaseCommand):
         api_get_airports_response = api_get_airports()
 
         if isinstance(api_get_airports_response, str):
-            self.log["details"] = str(f"API request error: {api_get_airports_response}")
-            return
+            self.log["information"] = str(f"API request error: {api_get_airports_response}")
+            return self.log["information"]
+             
 
         domestic_airport_data = [
             api_get_airports_response[key] for key in api_get_airports_response
