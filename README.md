@@ -1,4 +1,4 @@
-# amo-promo-dev-challenge
+# Dev Challenge Backend
 
 I've chose to use python language with Django framework
 
