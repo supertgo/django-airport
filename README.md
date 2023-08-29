@@ -159,8 +159,6 @@ python3 manage.py test
 
 ## Technologies Used
 
-This project utilizes various technologies to achieve its goals:
-
 - [Python](https://www.python.org/): The core programming language used for development.
 - [Django](https://www.djangoproject.com/): A high-level web framework that simplifies the development of web applications.
 - [Django Rest Framework](https://www.django-rest-framework.org/): A powerful toolkit for building Web APIs in Django applications.
