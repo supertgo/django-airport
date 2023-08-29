@@ -37,7 +37,7 @@ I've chose to use python language with Django framework
 
 
 ## Challenge 1
-To solve the first challenge, i've just followed the instructions on Django documentation https://docs.djangoproject.com/en/4.2/howto/custom-management-commands/ and created a file called `import_airports`, you can run:
+To solve the first challenge, i've just followed the instructions on Django documentation https://docs.djangoproject.com/en/4.2/howto/custom-management-commands/ and created a file called `import_airports`, you can run inside airport folder:
 
 `python manage.py import_airports`
 
@@ -53,7 +53,15 @@ The output of the django-admin command is like the one above, if completed succe
 
 If there is an error, the output is red.
 
+## Technologies Used
 
-## Technologies
+This project utilizes various technologies to achieve its goals:
 
-Django - https://www.djangoproject.com/ with  https://www.sqlite.org/index.html as DBMS
+- [Python](https://www.python.org/): The core programming language used for development.
+- [Django](https://www.djangoproject.com/): A high-level web framework that simplifies the development of web applications.
+- [Django Rest Framework](https://www.django-rest-framework.org/): : A powerful toolkit for building Web APIs in Django applications.
+- [Pandas](https://pandas.pydata.org/): A popular library for data manipulation and analysis.
+- [SQLite](https://www.sqlite.org/index.html): A lightweight and embedded relational database management system.
+
+These technologies are combined to create a robust and efficient system for your project.
+
