@@ -143,7 +143,7 @@ python manage.py migrate
 python manage.py import_airports
 ```
 
-### To test the second challenge follow the steps above:
+### To test the second challenge follow the steps below:
 
 Create your superuser with the following command:
 
